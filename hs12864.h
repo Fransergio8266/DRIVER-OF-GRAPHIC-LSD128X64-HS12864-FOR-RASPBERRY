@@ -8,7 +8,7 @@ void initinal(void);
 
 void initina2(void);
 
-void lcd_mesg(unsigned char *adder1, int len);
+void lcd_mesg(unsigned char *adder1, int len, unsigned char line);
 
 void DisplayGraphic(unsigned char *adder, int len);
 #endif

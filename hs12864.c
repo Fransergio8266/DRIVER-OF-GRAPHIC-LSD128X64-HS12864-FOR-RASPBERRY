@@ -6,8 +6,6 @@
 //#include "gpio.h"
 #include "spi_driver.h"
 
-
-
 static void SendByteLCD(unsigned char WLCDData)
 {
 /* SPI BYTE WIRITE */
@@ -70,10 +68,28 @@ nanosleep(&t,NULL);
 }
 
 
-void lcd_mesg(unsigned char *adder1, int len)
+void lcd_mesg(unsigned char *adder1, int len, unsigned char line)
 {
-unsigned char i;
+
+switch(line)
+{
+case 1:
 TransferData(0x80,0); //Set RAM Address
+break;
+case 2:
+TransferData(0x90,0); //Set RAM Address
+break;
+case 3:
+TransferData(0x88,0); //Set RAM Address
+break;
+case 4:
+TransferData(0x98,0); //Set RAM Address
+break;
+default:
+TransferData(0x80,0);
+}
+
+unsigned char i;
 delayMicroseconds(100);
 for(i=0;i<len;i++)
 {
@@ -174,8 +190,7 @@ void DisplayGraphic(unsigned char *adder, int len)
                         TransferData(*adder, 1);
                         adder++;
                     }
-                
-                
+
             }
             //*******display bottom half screen
             for (i = 0; i < 32; i++) //

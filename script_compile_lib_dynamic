@@ -1,7 +1,0 @@
-#!/bin/bash
-gcc -c -o main.o main.c
-gcc -c -fPIC -o hs12864.o hs12864.c 
-#gcc -c -fPIC -o gpio.o gpio.c
-gcc -c -fPIC -o spi_driver.o spi_driver.c
-gcc -o dynlib.so -shared gpio.o hs12864.o spi_driver.o
-gcc -o main main.o dynlib.so

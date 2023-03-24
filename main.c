@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
 #include <unistd.h>
@@ -5,16 +7,14 @@
 #include "hs12864.h"
 //#include "gpio.h"
 #include "spi_driver.h"
-
-
 const char *device = "/dev/spidev0.1";
 
-
-unsigned char IC_DAT [] = {"LINUX"};
-
+unsigned char IC_DAT1 [] = {"Linux"};
+unsigned char IC_DAT2 [] = {"ARM"};
+unsigned char IC_DAT3 [] = {"RASPBERRY"};
+unsigned char IC_DAT4 [] = {"LCD128_64"};
 
 unsigned char pic2[]={
-
 0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
 0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
 0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
@@ -75,50 +75,210 @@ unsigned char pic2[]={
 0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X1F,0X80,0X2F,0X80,0X00,0X00,
 0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
 0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+};
 
+const unsigned char table[21][7]={
+{0XE0,0XA0,0XA0,0XA0,0XA0,0XA0,0XE0},
+{0X40,0XC0,0X40,0X40,0X40,0X40,0XE0},
+{0XE0,0X20,0X20,0XE0,0X80,0X80,0XE0},
+{0XC0,0X20,0X20,0XE0,0X20,0X20,0XC0},
+{0XA0,0XA0,0XA0,0XE0,0X20,0X20,0X20},
+{0XE0,0X80,0X80,0XE0,0X20,0X20,0XE0},
+{0XE0,0X80,0X80,0XE0,0XA0,0XA0,0XE0},
+{0XE0,0X20,0X20,0XE0,0X20,0X20,0X20},
+{0XE0,0XA0,0XA0,0XE0,0XA0,0XA0,0XE0},
+{0XE0,0XA0,0XA0,0XE0,0X20,0X20,0XE0},
+{0X00,0X00,0X00,0X00,0X00,0XC0,0XC0},
+{0X60,0X60,0X00,0X00,0X00,0X60,0X60},
+{0X60,0X90,0X90,0XF0,0X90,0X90,0X90},
+{0XE0,0X90,0X90,0XF0,0X90,0X90,0XE0},
+{0X60,0X90,0X80,0X80,0X80,0X90,0X60},
+{0XE0,0X90,0X90,0X90,0X90,0X90,0XE0},
+{0XF0,0X80,0X80,0XF0,0X80,0X80,0XF0},
+{0XF0,0X80,0X80,0XF0,0X80,0X80,0X80},
+{0X70,0X80,0X80,0XB0,0X90,0X90,0X70},
+{0X90,0X90,0X90,0XF0,0X90,0X90,0X90},
+{0X00,0X00,0X00,0X00,0X00,0X00,0X00}
+};
+
+unsigned char pic1[]={
+0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
 };
 
 
 int main(int arc, char **argv){
-/*
-export_gpio(CS);
 
-sleep(1);
+unsigned char msg[]={"CA: 35.28"};
+unsigned char c=0;
+unsigned char b=0;
+unsigned int  init_addr=0;
+unsigned char pos=0;
+/* Flag to notice dot */
+unsigned char dot=0;
+/*Flag to notice letter*/
+unsigned char l=0;
 
-export_gpio(SID);
+for(c=0;c<sizeof(msg)-1;c++)
+{
 
-sleep(1);
+	switch (msg[c])
+	{
+	case '0':
+	pos=0;l=0;break;
+	case '1':
+	pos=1;l=0;break;
+	case '2':
+        pos=2;l=0;break;
+	case '3':
+        pos=3;l=0;break;
+	case '4':
+        pos=4;l=0;break;
+	case '5':
+        pos=5;l=0;break;
+	case '6':
+        pos=6;l=0;break;
+	case '7':
+        pos=7;l=0;break;
+	case '8':
+        pos=8;l=0;break;
+	case '9':
+        pos=9;l=0;break;
+	case '.':
+        pos=10;l=0;dot++;break;
+        case ':':
+        pos=11;l=1;dot=0;break;
+        case 'A':
+        pos=12;dot=0;l=1;break;
+        case 'B':
+        pos=13;dot=0;l=1;break;
+        case 'C':
+        pos=14;dot=0;l=1;break;
+        case 'D':
+        pos=15;dot=0;l=1;break;
+	case 'E':
+        pos=16;dot=0;l=1;break;
+        case 'F':
+        pos=17;dot=0;l=1;break;
+        case 'G':
+        pos=18;dot=0;l=1;break;
+        case 'H':
+        pos=19;dot=0;l=1;break;
+	case ' ':
+        pos=20;dot=0;l=1;break;
+	}
 
-export_gpio(SCLK);
+	if((c>0) && !(c%2))
+	{
+	++init_addr;
+	}
+	
+	if(!(c%2))
+	{
+		for(b=0;b<7;b++)
+		{
+			if(dot==2)
+                	{
+			pic1[b*16+init_addr-1] = (pic1[b*16+init_addr-1]) | ((table[pos][b]) & (0X80))>>7;
+                        pic1[b*16+init_addr] = ((table[pos][b]) & (0X7F))<<1;
+                	}
+			else if((dot!=2) && (l==0))
+			{
+			pic1[b*16+init_addr] = (table[pos][b]);
+			}
+			else if((l==1) && (c<2))
+                        {
+                        pic1[b*16+init_addr] = (table[pos][b]);
+                        }
+	/*uma vez*/	else if((l==1) && (c==2 || c==3))
+                        {
+                        pic1[b*16+init_addr] = pic1[b*16+init_addr] | ((table[pos][b]) >> 2);
+                        }
+			else if((l==1) && (c==4))
+                        {
+                        pic1[b*16+init_addr] = pic1[b*16+init_addr] | ((table[pos][b]) >> 4);
+                        }
+			 
+	
+		}
+		
+		
+	}
+	else
+	{
+		for(b=0;b<7;b++)
+                {		
+				if((dot==2) && (l==0))
+				{
+				pic1[b*16+init_addr] = pic1[b*16+init_addr] | table[pos][b] >> 3 ;
+				}
+				else if((dot!=2) && (l==0))
+				{
+                        	pic1[b*16+init_addr] = pic1[b*16+init_addr] | table[pos][b] >> 4 ;
+				}
+				else if((l==1) && c<3)
+                        	{
+                        	pic1[b*16+init_addr] = pic1[b*16+init_addr] | (((table[pos][b]) & (0XE0)) >> 5);
+				pic1[b*16+init_addr+1] = ((table[pos][b]) & (0X10))<<3;
+                        	}
+				else if((l==1) && ((c>2) && c<5))
+                        	{
+				pic1[b*16+init_addr] = ((pic1[b*16+init_addr]) | ((table[pos][b]) >> 7));
+                        	pic1[b*16+init_addr+1] = ((table[pos][b]) & (0X70)) << 1;
+                        	}
 
-sleep(1);
+				
 
-direction_gpio(CS, OUTPUT);
+                }
+	}
+	if(dot==1)
+	{
+	dot++;
+	}
+}
 
-sleep(1);
 
-direction_gpio(SID, OUTPUT);
 
-sleep(1);
 
-direction_gpio(SCLK, OUTPUT);
-
-value_gpio(CS,HIGH);
-*/
 config_spi(device);
 sleep(1);
 delayMicroseconds(10);
-//initinal();
-
 
 while(true)
 {
+
 initina2();
 DisplayGraphic(pic2,sizeof(pic2));  //show Graphic 
 sleep(2);
+DisplayGraphic(pic1,sizeof(pic1));  //show Graphic
+sleep(2);
+
 initinal();
 delayMicroseconds(100);
-lcd_mesg(IC_DAT,sizeof(IC_DAT));
+lcd_mesg(IC_DAT1,sizeof(IC_DAT1),1);
+lcd_mesg(IC_DAT2,sizeof(IC_DAT2),2);
+lcd_mesg(IC_DAT3,sizeof(IC_DAT3),3);
+lcd_mesg(IC_DAT4,sizeof(IC_DAT4),4);
+
 sleep(2);
 
 }

@@ -6,6 +6,7 @@
 #define INPUT 0
 #define OUTPUT 1
 
+#include <stdbool.h>
 
 bool export_gpio(int pin);
 

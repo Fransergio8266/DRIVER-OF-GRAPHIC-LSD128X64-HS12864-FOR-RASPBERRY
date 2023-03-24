@@ -12,7 +12,7 @@
 
 static unsigned char mode = SPI_MODE_3 | SPI_CS_HIGH;
 static unsigned char bits = 8;
-static uint32_t speed = 1000000;
+static uint32_t speed = 500000;
 static uint16_t delay=0;
 int fd;
 
@@ -49,6 +49,8 @@ printf("can't set max speed hz\n");
 
 void write_spi(unsigned char *tx)
 {
+
+
 int ret;
 unsigned char rx[ARRAY_SIZE(tx)] = {0, };
 struct spi_ioc_transfer tr = 
