@@ -12,7 +12,7 @@
 
 static unsigned char mode = SPI_MODE_3 | SPI_CS_HIGH;
 static unsigned char bits = 8;
-static uint32_t speed = 500000;
+static uint32_t speed = 2000000;
 static uint16_t delay=0;
 int fd;
 

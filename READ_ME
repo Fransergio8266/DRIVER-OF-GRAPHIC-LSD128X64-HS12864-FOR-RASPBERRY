@@ -1,0 +1,4 @@
+#AFTER DOWNLOAD CROSS COMPILE EXECUTE THESE STEPS TO CONFIGURE ENVIRONMENT
+export ARCH=arm
+export CROSS_COMPILER=/home/fransergio/gcc-arm-9.2-2019.12-x86_64-arm-none-linux-gnueabihf/bin/arm-none-linux-gnueabihf-gcc
+export PATH=~/gcc/bin/:$PATH

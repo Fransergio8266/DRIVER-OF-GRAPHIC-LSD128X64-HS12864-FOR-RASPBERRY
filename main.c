@@ -1,12 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <time.h>
+#include <sys/time.h>
 #include <unistd.h>
 
 #include "hs12864.h"
 //#include "gpio.h"
 #include "spi_driver.h"
+
+#define DEBUG_TRACE(x) { \
+        struct timeval  tv; \
+        gettimeofday(&tv, NULL); \
+        double t0 = ((tv.tv_sec)*1000000 + tv.tv_usec); \
+        x \
+        gettimeofday(&tv, NULL); \
+        double t1 = ((tv.tv_sec)*1000000 + tv.tv_usec); \
+        printf(" Levou %lf us\n",t1-t0); \
+}
+
+
+
 const char *device = "/dev/spidev0.1";
 
 unsigned char IC_DAT1 [] = {"Linux"};
@@ -102,14 +115,6 @@ const unsigned char table[21][7]={
 };
 
 unsigned char pic1[]={
-0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
-0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
-0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
-0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
-0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
-0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
-0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
-0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
 0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
 0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
 0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
@@ -269,7 +274,7 @@ while(true)
 initina2();
 DisplayGraphic(pic2,sizeof(pic2));  //show Graphic 
 sleep(2);
-DisplayGraphic(pic1,sizeof(pic1));  //show Graphic
+DEBUG_TRACE(DisplayGraphic(pic1,sizeof(pic1));)  //show Graphic
 sleep(2);
 
 initinal();
